@@ -1,0 +1,94 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              String   @id @default(cuid())
+  username        String   @unique
+  email           String   @unique
+  password        String
+  uniqueCode      String   @unique
+  telegramId      String?  @unique
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  myTasks         Task[]       @relation("TaskOwner")
+  assignedTasks   Task[]       @relation("TaskAssignee")
+  watchingTasks   Task[]       @relation("TaskWatcher")
+  teamMemberships TeamMember[]
+  comments        Comment[]
+  ownedTeams      Team[]
+}
+
+model Team {
+  id        String   @id @default(cuid())
+  name      String
+  ownerId   String
+  owner     User     @relation(fields: [ownerId], references: [id])
+  members   TeamMember[]
+  tasks     Task[]
+  createdAt DateTime @default(now())
+}
+
+model TeamMember {
+  id     String @id @default(cuid())
+  teamId String
+  userId String
+  role   String @default("member")
+  team   Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([teamId, userId])
+}
+
+model Task {
+  id          String    @id @default(cuid())
+  title       String
+  description String?
+  status      String    @default("todo")
+  priority    String    @default("medium")
+  category    String?
+  dueDate     DateTime?
+  isTeamTask  Boolean   @default(false)
+
+  ownerId    String
+  owner      User   @relation("TaskOwner", fields: [ownerId], references: [id])
+
+  assigneeId String?
+  assignee   User?   @relation("TaskAssignee", fields: [assigneeId], references: [id])
+
+  watchers User[] @relation("TaskWatcher")
+
+  teamId String?
+  team   Team?   @relation(fields: [teamId], references: [id])
+
+  comments Comment[]
+
+  order Int @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  content   String
+  taskId    String
+  task      Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model Category {
+  id       String  @id @default(cuid())
+  name     String
+  userId   String
+  color    String  @default("#6366f1")
+  isGlobal Boolean @default(false)
+}

@@ -1,0 +1,63 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    color-scheme: dark;
+  }
+
+  body {
+    @apply bg-[#0f1117] text-white font-sans antialiased;
+    margin: 0;
+    padding: 0;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #1a1d27;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #2d3148;
+    border-radius: 3px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #6366f1;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-[#6366f1] hover:bg-[#5254cc] text-white font-medium px-4 py-2 rounded-lg transition-colors duration-150 flex items-center gap-2;
+  }
+
+  .btn-secondary {
+    @apply bg-[#252836] hover:bg-[#2d3148] text-white font-medium px-4 py-2 rounded-lg transition-colors duration-150 flex items-center gap-2;
+  }
+
+  .btn-ghost {
+    @apply hover:bg-[#252836] text-gray-400 hover:text-white font-medium px-3 py-2 rounded-lg transition-colors duration-150 flex items-center gap-2;
+  }
+
+  .input-field {
+    @apply bg-[#252836] border border-[#2d3148] text-white placeholder-gray-500 rounded-lg px-3 py-2 w-full focus:outline-none focus:border-[#6366f1] transition-colors duration-150;
+  }
+
+  .card {
+    @apply bg-[#1a1d27] border border-[#2d3148] rounded-xl;
+  }
+
+  .badge {
+    @apply inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-medium;
+  }
+}
